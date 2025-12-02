@@ -89,13 +89,19 @@ func (c *Client) generateRequestGoogle(ctx context.Context, w dns.ResponseWriter
 		}
 	}
 
-	req.Header.Set("Accept", "application/json, application/dns-message, application/dns-udpwireformat")
-	if !c.conf.Other.NoUserAgent {
-		req.Header.Set("User-Agent", USER_AGENT)
-	} else {
-		req.Header.Set("User-Agent", "")
-	}
+	req.Header.Set("Accept", "application/dns-json")
+	// if !c.conf.Other.NoUserAgent {
+	// 	req.Header.Set("User-Agent", USER_AGENT)
+	// } else {
+	// 	req.Header.Set("User-Agent", "")
+	// }
 	req = req.WithContext(ctx)
+
+	// Print request details
+	log.Printf("Request: %s\n", req)
+	log.Printf("Request URL: %s\n", req.URL.String())
+	log.Printf("Request Headers: %v\n", req.Header)
+	log.Printf("Request Body: %v\n", req.Body)
 
 	c.httpClientMux.RLock()
 	resp, err := c.httpClient.Do(req)
@@ -109,7 +115,8 @@ func (c *Client) generateRequestGoogle(ctx context.Context, w dns.ResponseWriter
 			err: err,
 		}
 	}*/
-
+	log.Printf("$$$$$$LastRequest: %s\n", req.URL.String())
+	log.Printf("Response Status: %v\n", resp)
 	if err != nil {
 		log.Println(err)
 		reply := jsondns.PrepareReply(r)
